@@ -1,0 +1,19 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Kim profile mark</title>
+  <desc id="desc">A minimal abstract profile mark in a refined Apple-like monochrome style.</desc>
+  <defs>
+    <linearGradient id="bg" x1="70" y1="42" x2="448" y2="492" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#ECEEF2"/>
+    </linearGradient>
+    <linearGradient id="shape" x1="168" y1="92" x2="366" y2="414" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2B2B2F"/>
+      <stop offset="1" stop-color="#0F0F12"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="510" height="510" rx="104" fill="url(#bg)" stroke="#D9DDE5" stroke-width="2"/>
+  <circle cx="256" cy="214" r="112" fill="url(#shape)"/>
+  <path d="M112 420C140 344 195 304 256 304C317 304 372 344 400 420H112Z" fill="url(#shape)"/>
+  <path d="M190 221C208 242 230 253 256 253C282 253 304 242 322 221" stroke="#F5F5F7" stroke-width="16" stroke-linecap="round"/>
+  <circle cx="364" cy="140" r="26" fill="#0071E3"/>
+</svg>

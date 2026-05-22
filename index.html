@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>你好，我是 Kim</title>
+    <meta
+      name="description"
+      content="一个给新朋友看的个人介绍网站：关于我、生活经历、兴趣和连接方式。"
+    />
+    <meta property="og:title" content="你好，我是 Kim" />
+    <meta
+      property="og:description"
+      content="真诚有趣、容易靠近、有生活感的一页个人介绍。"
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="assets/profile-mark.svg" />
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Kim 的首页">
+        <img src="assets/kim-avatar.jpg" alt="" />
+        <span>Kim</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        菜单
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="主导航">
+        <a href="about.html">关于我</a>
+        <a href="stories.html">经历</a>
+        <a href="likes.html">兴趣</a>
+        <a href="connect.html">联系</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Nice to meet you</p>
+          <h1>你好，我是Kim。一个喜欢观察生活，善于思考的人。</h1>
+          <p class="hero-text">
+            与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。
+          </p>
+          <div class="hero-actions" aria-label="主要入口">
+            <a class="button primary" href="about.html">先认识我</a>
+            <a class="button ghost" href="connect.html">来打个招呼</a>
+          </div>
+        </div>
+        <figure class="hero-visual">
+          <img src="assets/kim-avatar.jpg" alt="Kim 在街头的照片" />
+        </figure>
+      </section>
+
+      <section class="tag-strip" aria-label="快速认识 Kim">
+        <span>喜欢观察人</span>
+        <span>爱散步</span>
+        <span>对生活保持好奇</span>
+        <span>愿意倾听</span>
+      </section>
+
+      <section class="section intro-grid">
+        <article class="feature-card">
+          <p class="card-kicker">01 / Who</p>
+          <h2>我是谁</h2>
+          <p>
+            我正在把自己训练成一个更会感受、更会表达、更会理解他人的人。很多时候，我会先听完故事，再慢慢说出自己的判断。
+          </p>
+          <a href="about.html">读完整介绍</a>
+        </article>
+        <article class="feature-card">
+          <p class="card-kicker">02 / Stories</p>
+          <h2>我经历过什么</h2>
+          <p>
+            这里放的不是履历，而是一些形成我的片段：一次转变、一个长期习惯、一段让我重新理解自己的经历。
+          </p>
+          <a href="stories.html">看看生活片段</a>
+        </article>
+        <article class="feature-card">
+          <p class="card-kicker">03 / Now</p>
+          <h2>我最近在关心什么</h2>
+          <p>
+            我喜欢收集能让人展开对话的东西：一本书、一首歌、一段路、一个问题，或者某个突然变清楚的瞬间。
+          </p>
+          <a href="likes.html">找到共同话题</a>
+        </article>
+      </section>
+
+      <section class="section note-band">
+        <div>
+          <p class="eyebrow">A small note</p>
+          <h2>如果你刚认识我，可以从这些问题开始。</h2>
+        </div>
+        <ul class="question-list">
+          <li>最近有什么事情让你觉得生活突然变亮了一点？</li>
+          <li>你有没有一个反复回去的地方、歌单或习惯？</li>
+          <li>你更喜欢热闹地表达，还是安静地靠近？</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Made for softer first hellos.</p>
+      <a href="connect.html">联系 Kim</a>
+    </footer>
+
+    <script src="assets/script.js"></script>
+  </body>
+</html>
