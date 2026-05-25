@@ -1,5 +1,7 @@
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
+const progressBar = document.querySelector(".scroll-progress span");
+const parallaxItems = document.querySelectorAll("[data-parallax]");
 
 if (navToggle && siteNav) {
   navToggle.addEventListener("click", () => {
@@ -7,6 +9,20 @@ if (navToggle && siteNav) {
     navToggle.setAttribute("aria-expanded", String(isOpen));
   });
 }
+
+const updateScrollProgress = () => {
+  if (!progressBar) {
+    return;
+  }
+
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollable <= 0 ? 0 : window.scrollY / scrollable;
+  progressBar.style.width = `${Math.min(progress, 1) * 100}%`;
+};
+
+window.addEventListener("scroll", updateScrollProgress, { passive: true });
+window.addEventListener("resize", updateScrollProgress);
+updateScrollProgress();
 
 const revealItems = document.querySelectorAll("[data-reveal]");
 
@@ -38,6 +54,18 @@ document.querySelectorAll(".tilt-card").forEach((card) => {
     card.style.transform = "";
   });
 });
+
+if (parallaxItems.length > 0) {
+  const updateParallax = () => {
+    const offset = window.scrollY * -0.08;
+    parallaxItems.forEach((item) => {
+      item.style.transform = `translate3d(0, ${offset}px, 0) scale(1.04)`;
+    });
+  };
+
+  window.addEventListener("scroll", updateParallax, { passive: true });
+  updateParallax();
+}
 
 const fieldCanvas = document.querySelector("#field-canvas");
 

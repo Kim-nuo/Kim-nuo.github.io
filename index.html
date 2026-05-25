@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kim - Inner Field</title>
+    <title>Kim - A Quiet Film</title>
     <meta
       name="description"
       content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
     />
-    <meta property="og:title" content="Kim - Inner Field" />
+    <meta property="og:title" content="Kim - A Quiet Film" />
     <meta
       property="og:description"
       content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
@@ -19,7 +19,7 @@
     <meta property="og:image:alt" content="Kim 在街头的照片" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Kim - Inner Field" />
+    <meta name="twitter:title" content="Kim - A Quiet Film" />
     <meta
       name="twitter:description"
       content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
@@ -28,11 +28,13 @@
     <link rel="icon" href="assets/profile-mark.svg" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
-  <body class="designer-home">
+  <body class="cinema-home">
     <a class="skip-link" href="#main">跳到正文</a>
-    <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
+    <canvas class="field-canvas cinema-canvas" id="field-canvas" aria-hidden="true"></canvas>
+    <div class="film-grain" aria-hidden="true"></div>
+    <div class="scroll-progress" aria-hidden="true"><span></span></div>
 
-    <header class="site-header designer-nav">
+    <header class="site-header cinema-nav">
       <a class="brand" href="index.html" aria-label="Kim 的首页">
         <img src="assets/kim-avatar.jpg" alt="" />
         <span>Kim</span>
@@ -41,94 +43,93 @@
         菜单
       </button>
       <nav class="site-nav" id="site-nav" aria-label="主导航">
-        <a href="#field">场域</a>
-        <a href="#signals">关键词</a>
-        <a href="#stories">片段</a>
+        <a href="#opening">开场</a>
+        <a href="#scenes">片段</a>
+        <a href="about.html">关于我</a>
         <a href="connect.html">联系</a>
       </nav>
     </header>
 
     <main id="main">
-      <section class="field-hero" id="field" data-reveal>
-        <div class="field-copy">
-          <p class="field-label">Personal website / Inner Field</p>
+      <section class="cinema-hero" id="opening">
+        <div class="hero-frame" data-parallax>
+          <img src="assets/kim-avatar.jpg" alt="Kim 在街头的照片" />
+        </div>
+        <div class="hero-shade" aria-hidden="true"></div>
+        <div class="hero-caption" data-reveal>
+          <p class="film-kicker">A quiet film about Kim</p>
           <h1>你好，我是 Kim。</h1>
-          <p class="field-line">一个喜欢观察生活，善于思考的人。</p>
-          <p class="field-note">与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。</p>
-          <div class="field-actions" aria-label="主要入口">
-            <a class="button primary" href="#stories">进入我的场域</a>
-            <a class="button ghost" href="connect.html">开始一次对话</a>
-          </div>
+          <p>
+            一个喜欢观察生活，善于思考的人。与大家一起慢慢找到自己，
+            慢慢认识自己，慢慢变好。
+          </p>
         </div>
-
-        <div class="portrait-stage" aria-label="Kim 的照片与个人关键词">
-          <figure class="portrait-card tilt-card">
-            <img src="assets/kim-avatar.jpg" alt="Kim 在街头的照片" />
-          </figure>
-          <div class="floating-note note-one">observe</div>
-          <div class="floating-note note-two">think</div>
-          <div class="floating-note note-three">feel</div>
+        <div class="hero-side-note" data-reveal>
+          <span>01</span>
+          <strong>不是简历，是一个人正在靠近自己的过程。</strong>
         </div>
       </section>
 
-      <section class="signal-section" id="signals" data-reveal>
-        <div class="section-intro">
-          <p class="field-label">Signals</p>
-          <h2>不是标签，是一些靠近我的线索。</h2>
-        </div>
-        <div class="signal-orbit" aria-label="Kim 的关键词">
-          <span>喜欢观察人</span>
-          <span>爱尝试，但坚持困难</span>
-          <span>包容性极强，接受一切</span>
-          <span>愿意倾听</span>
-        </div>
-      </section>
-
-      <section class="manifesto-section" data-reveal>
+      <section class="cinema-statement" data-reveal>
         <p>
-          我正在把自己训练成一个更会感受、更会表达、更会理解他人的人。
-          很多时候，我会先听完故事，再慢慢说出自己的判断。
+          我一直在学习把复杂的感受讲清楚：有时候是对人的理解，有时候是对自己的复盘，
+          有时候只是想在一个安静的下午，确认自己仍然保留着感受生活的能力。
         </p>
       </section>
 
-      <section class="story-panel" id="stories">
-        <div class="section-intro" data-reveal>
-          <p class="field-label">Fragments</p>
-          <h2>一些正在形成我的片段。</h2>
-        </div>
-        <div class="story-grid">
-          <a class="story-tile tilt-card" href="stories.html" data-reveal>
-            <span>01</span>
-            <h3>人与人之间的理解</h3>
-            <p>跟很多不同的人对话后，我发现很多关系的靠近不是靠热闹，而是靠被准确地听见。</p>
-          </a>
-          <a class="story-tile tilt-card" href="stories.html" data-reveal>
-            <span>02</span>
-            <h3>独处与自我整理</h3>
-            <p>咖啡厅、艺术馆、看书、看展，是我排解矛盾焦虑内心的一种方式。</p>
-          </a>
-          <a class="story-tile tilt-card" href="likes.html" data-reveal>
-            <span>03</span>
-            <h3>我喜欢的问题</h3>
-            <p>对某事的深刻感悟和理解，以及对未来和当下的打算。</p>
-          </a>
-        </div>
+      <section class="cinema-tags" aria-label="快速认识 Kim" data-reveal>
+        <span>喜欢观察人</span>
+        <span>爱尝试，但坚持困难</span>
+        <span>包容性极强，接受一切</span>
+        <span>愿意倾听</span>
       </section>
 
-      <section class="conversation-section" data-reveal>
-        <div>
-          <p class="field-label">Conversation</p>
-          <h2>如果你也喜欢进行有深度的讨论，可以来找我。</h2>
+      <section class="scene-strip" id="scenes">
+        <article class="scene-card wide" data-reveal>
+          <div>
+            <p class="film-kicker">Scene 01 / Listening</p>
+            <h2>人与人之间的靠近，很多时候来自被准确地听见。</h2>
+          </div>
+          <p>
+            跟很多不同的人对话后，我开始更频繁地记录别人说话时的停顿、犹豫和期待。
+            我在意那些没有被直接说出口的部分。
+          </p>
+        </article>
+
+        <article class="scene-card image-card" data-reveal>
+          <img src="assets/kim-avatar.jpg" alt="街头照片局部" />
+          <div>
+            <p class="film-kicker">Scene 02 / Alone</p>
+            <h2>一个人独处，是我整理自己的方式。</h2>
+            <p>
+              咖啡厅、艺术馆、静静看书、思考、看展。它们像某种出口，
+              帮我和矛盾焦虑的内心慢慢相处。
+            </p>
+          </div>
+        </article>
+
+        <article class="scene-card" data-reveal>
+          <p class="film-kicker">Scene 03 / Becoming</p>
+          <h2>我想知道：怎样才算把生活过得更像自己？</h2>
+          <p>
+            这个问题没有标准答案。现在我给自己的版本是：保留好奇，
+            保留边界，也保留一点愿意重新开始的勇气。
+          </p>
+        </article>
+      </section>
+
+      <section class="cinema-connect" data-reveal>
+        <p class="film-kicker">Final scene</p>
+        <h2>如果你也喜欢进行有深度的讨论，可以来找我。</h2>
+        <div class="connect-actions">
+          <a class="button primary" href="connect.html">联系 Kim</a>
+          <a class="button ghost" href="likes.html">从兴趣开始聊</a>
         </div>
-        <a class="conversation-link" href="connect.html">
-          <span>WeChat</span>
-          <strong>circumspection1</strong>
-        </a>
       </section>
     </main>
 
-    <footer class="site-footer designer-footer">
-      <p>Kim - Inner Field</p>
+    <footer class="site-footer cinema-footer">
+      <p>Kim - A Quiet Film</p>
       <a href="https://kim-nuo.github.io/">kim-nuo.github.io</a>
     </footer>
 
