@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>你好，我是 Kim</title>
+    <title>Kim - Inner Field</title>
     <meta
       name="description"
       content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
     />
-    <meta property="og:title" content="你好，我是 Kim" />
+    <meta property="og:title" content="Kim - Inner Field" />
     <meta
       property="og:description"
       content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
@@ -19,7 +19,7 @@
     <meta property="og:image:alt" content="Kim 在街头的照片" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="你好，我是 Kim" />
+    <meta name="twitter:title" content="Kim - Inner Field" />
     <meta
       name="twitter:description"
       content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
@@ -28,9 +28,11 @@
     <link rel="icon" href="assets/profile-mark.svg" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
-  <body class="home-page">
+  <body class="designer-home">
     <a class="skip-link" href="#main">跳到正文</a>
-    <header class="site-header">
+    <canvas class="field-canvas" id="field-canvas" aria-hidden="true"></canvas>
+
+    <header class="site-header designer-nav">
       <a class="brand" href="index.html" aria-label="Kim 的首页">
         <img src="assets/kim-avatar.jpg" alt="" />
         <span>Kim</span>
@@ -39,84 +41,95 @@
         菜单
       </button>
       <nav class="site-nav" id="site-nav" aria-label="主导航">
-        <a href="about.html">关于我</a>
-        <a href="stories.html">经历</a>
-        <a href="likes.html">兴趣</a>
+        <a href="#field">场域</a>
+        <a href="#signals">关键词</a>
+        <a href="#stories">片段</a>
         <a href="connect.html">联系</a>
       </nav>
     </header>
 
     <main id="main">
-      <section class="hero immersive-hero">
-        <canvas class="hero-scene" id="kim-3d-scene" aria-hidden="true"></canvas>
-        <div class="hero-glow" aria-hidden="true"></div>
-        <div class="hero-copy">
-          <p class="eyebrow">Nice to meet you</p>
-          <h1>你好，我是Kim。一个喜欢观察生活，善于思考的人。</h1>
-          <p class="hero-text">
-            与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。
-          </p>
-          <div class="hero-actions" aria-label="主要入口">
-            <a class="button primary" href="about.html">先认识我</a>
-            <a class="button ghost" href="connect.html">来打个招呼</a>
+      <section class="field-hero" id="field" data-reveal>
+        <div class="field-copy">
+          <p class="field-label">Personal website / Inner Field</p>
+          <h1>你好，我是 Kim。</h1>
+          <p class="field-line">一个喜欢观察生活，善于思考的人。</p>
+          <p class="field-note">与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。</p>
+          <div class="field-actions" aria-label="主要入口">
+            <a class="button primary" href="#stories">进入我的场域</a>
+            <a class="button ghost" href="connect.html">开始一次对话</a>
           </div>
         </div>
-        <figure class="hero-portrait">
-          <img src="assets/kim-avatar.jpg" alt="Kim 在街头的照片" />
-          <figcaption>Kim / Personal Field</figcaption>
-        </figure>
-      </section>
 
-      <section class="tag-strip" aria-label="快速认识 Kim">
-        <span>喜欢观察人</span>
-        <span>爱尝试 但坚持 困难</span>
-        <span>包容性极强 接受一切</span>
-        <span>愿意倾听</span>
-      </section>
-
-      <section class="section intro-grid">
-        <article class="feature-card">
-          <p class="card-kicker">01 / Who</p>
-          <h2>我是谁</h2>
-          <p>
-            我正在把自己训练成一个更会感受、更会表达、更会理解他人的人。很多时候，我会先听完故事，再慢慢说出自己的判断。
-          </p>
-          <a href="about.html">读完整介绍</a>
-        </article>
-        <article class="feature-card">
-          <p class="card-kicker">02 / Stories</p>
-          <h2>我经历过什么</h2>
-          <p>
-            这里放的不是履历，而是一些形成我的片段：一次转变、一个长期习惯、一段让我重新理解自己的经历。
-          </p>
-          <a href="stories.html">看看生活片段</a>
-        </article>
-        <article class="feature-card">
-          <p class="card-kicker">03 / Now</p>
-          <h2>我最近在关心什么</h2>
-          <p>
-            我喜欢收集能让人展开对话的东西：一本书、一首歌、一段路、一个问题，或者某个突然变清楚的瞬间。
-          </p>
-          <a href="likes.html">找到共同话题</a>
-        </article>
-      </section>
-
-      <section class="section note-band">
-        <div>
-          <p class="eyebrow">A small note</p>
-          <h2>如果你刚认识我，可以从这些问题开始。</h2>
+        <div class="portrait-stage" aria-label="Kim 的照片与个人关键词">
+          <figure class="portrait-card tilt-card">
+            <img src="assets/kim-avatar.jpg" alt="Kim 在街头的照片" />
+          </figure>
+          <div class="floating-note note-one">observe</div>
+          <div class="floating-note note-two">think</div>
+          <div class="floating-note note-three">feel</div>
         </div>
-        <ul class="question-list">
-          <li>最近有什么事情让你觉得生活突然变亮了一点？</li>
-          <li>你有没有一个反复回去的地方、歌单或习惯？</li>
-          <li>你更喜欢热闹地表达，还是安静地靠近？</li>
-        </ul>
+      </section>
+
+      <section class="signal-section" id="signals" data-reveal>
+        <div class="section-intro">
+          <p class="field-label">Signals</p>
+          <h2>不是标签，是一些靠近我的线索。</h2>
+        </div>
+        <div class="signal-orbit" aria-label="Kim 的关键词">
+          <span>喜欢观察人</span>
+          <span>爱尝试，但坚持困难</span>
+          <span>包容性极强，接受一切</span>
+          <span>愿意倾听</span>
+        </div>
+      </section>
+
+      <section class="manifesto-section" data-reveal>
+        <p>
+          我正在把自己训练成一个更会感受、更会表达、更会理解他人的人。
+          很多时候，我会先听完故事，再慢慢说出自己的判断。
+        </p>
+      </section>
+
+      <section class="story-panel" id="stories">
+        <div class="section-intro" data-reveal>
+          <p class="field-label">Fragments</p>
+          <h2>一些正在形成我的片段。</h2>
+        </div>
+        <div class="story-grid">
+          <a class="story-tile tilt-card" href="stories.html" data-reveal>
+            <span>01</span>
+            <h3>人与人之间的理解</h3>
+            <p>跟很多不同的人对话后，我发现很多关系的靠近不是靠热闹，而是靠被准确地听见。</p>
+          </a>
+          <a class="story-tile tilt-card" href="stories.html" data-reveal>
+            <span>02</span>
+            <h3>独处与自我整理</h3>
+            <p>咖啡厅、艺术馆、看书、看展，是我排解矛盾焦虑内心的一种方式。</p>
+          </a>
+          <a class="story-tile tilt-card" href="likes.html" data-reveal>
+            <span>03</span>
+            <h3>我喜欢的问题</h3>
+            <p>对某事的深刻感悟和理解，以及对未来和当下的打算。</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="conversation-section" data-reveal>
+        <div>
+          <p class="field-label">Conversation</p>
+          <h2>如果你也喜欢进行有深度的讨论，可以来找我。</h2>
+        </div>
+        <a class="conversation-link" href="connect.html">
+          <span>WeChat</span>
+          <strong>circumspection1</strong>
+        </a>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <p>Made for softer first hellos.</p>
-      <a href="connect.html">联系 Kim</a>
+    <footer class="site-footer designer-footer">
+      <p>Kim - Inner Field</p>
+      <a href="https://kim-nuo.github.io/">kim-nuo.github.io</a>
     </footer>
 
     <script src="assets/script.js"></script>

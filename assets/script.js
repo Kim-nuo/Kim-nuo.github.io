@@ -8,148 +8,151 @@ if (navToggle && siteNav) {
   });
 }
 
-const sceneCanvas = document.querySelector("#kim-3d-scene");
+const revealItems = document.querySelectorAll("[data-reveal]");
 
-if (sceneCanvas) {
+if (revealItems.length > 0) {
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.18 }
+  );
+
+  revealItems.forEach((item) => revealObserver.observe(item));
+}
+
+document.querySelectorAll(".tilt-card").forEach((card) => {
+  card.addEventListener("pointermove", (event) => {
+    const rect = card.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    card.style.transform = `perspective(900px) rotateX(${y * -5}deg) rotateY(${x * 7}deg) translateY(-4px)`;
+  });
+
+  card.addEventListener("pointerleave", () => {
+    card.style.transform = "";
+  });
+});
+
+const fieldCanvas = document.querySelector("#field-canvas");
+
+if (fieldCanvas) {
+  const context = fieldCanvas.getContext("2d");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const pointer = { x: 0, y: 0 };
+  const target = { x: 0, y: 0 };
+  let width = 0;
+  let height = 0;
+  let stars = [];
+  let ribbons = [];
 
-  import("https://unpkg.com/three@0.164.1/build/three.module.js")
-    .then((THREE) => {
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
-      const renderer = new THREE.WebGLRenderer({
-        canvas: sceneCanvas,
-        alpha: true,
-        antialias: true,
-        powerPreference: "high-performance",
-      });
-      const clock = new THREE.Clock();
-      const pointer = new THREE.Vector2(0, 0);
-      const target = new THREE.Vector2(0, 0);
+  const randomBetween = (min, max) => Math.random() * (max - min) + min;
 
-      camera.position.set(0, 0.1, 7);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+  const resize = () => {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    fieldCanvas.width = Math.floor(width * ratio);
+    fieldCanvas.height = Math.floor(height * ratio);
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
-      scene.add(ambientLight);
+    const starCount = width < 720 ? 58 : 112;
+    stars = Array.from({ length: starCount }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: randomBetween(0.7, 2.2),
+      depth: randomBetween(0.2, 1),
+      alpha: randomBetween(0.12, 0.5),
+      phase: Math.random() * Math.PI * 2,
+    }));
 
-      const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
-      keyLight.position.set(3, 4, 5);
-      scene.add(keyLight);
+    ribbons = Array.from({ length: 4 }, (_, index) => ({
+      y: height * randomBetween(0.18, 0.88),
+      amplitude: randomBetween(38, 110),
+      speed: randomBetween(0.12, 0.28) * (index % 2 === 0 ? 1 : -1),
+      alpha: randomBetween(0.08, 0.16),
+      hue: index % 2 === 0 ? "125, 184, 255" : "255, 255, 255",
+    }));
+  };
 
-      const blueMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x0071e3,
-        metalness: 0.18,
-        roughness: 0.22,
-        transmission: 0.34,
-        thickness: 0.55,
-        transparent: true,
-        opacity: 0.54,
-      });
-
-      const silverMaterial = new THREE.MeshStandardMaterial({
-        color: 0xf4f5f7,
-        metalness: 0.42,
-        roughness: 0.2,
-        transparent: true,
-        opacity: 0.84,
-      });
-
-      const ringGroup = new THREE.Group();
-      const ringOne = new THREE.Mesh(new THREE.TorusGeometry(1.72, 0.018, 20, 160), blueMaterial);
-      const ringTwo = new THREE.Mesh(new THREE.TorusGeometry(2.22, 0.012, 16, 160), silverMaterial);
-      const ringThree = new THREE.Mesh(new THREE.TorusGeometry(0.98, 0.01, 16, 120), silverMaterial);
-      ringOne.rotation.set(0.78, 0.15, 0.3);
-      ringTwo.rotation.set(1.2, -0.4, -0.24);
-      ringThree.rotation.set(-0.45, 0.65, 0.12);
-      ringGroup.add(ringOne, ringTwo, ringThree);
-      ringGroup.position.set(1.9, 0.18, -0.8);
-      scene.add(ringGroup);
-
-      const portraitGroup = new THREE.Group();
-      const loader = new THREE.TextureLoader();
-      loader.load("assets/kim-avatar.jpg", (texture) => {
-        texture.colorSpace = THREE.SRGBColorSpace;
-        const portrait = new THREE.Mesh(
-          new THREE.PlaneGeometry(1.6, 2.05, 1, 1),
-          new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.9 })
-        );
-        portrait.position.set(2.35, -0.14, -0.05);
-        portrait.rotation.set(0.02, -0.34, 0.025);
-        portraitGroup.add(portrait);
-      });
-      scene.add(portraitGroup);
-
-      const dotCount = window.innerWidth < 720 ? 80 : 150;
-      const positions = new Float32Array(dotCount * 3);
-      for (let index = 0; index < dotCount; index += 1) {
-        positions[index * 3] = (Math.random() - 0.5) * 8;
-        positions[index * 3 + 1] = (Math.random() - 0.5) * 4.8;
-        positions[index * 3 + 2] = (Math.random() - 0.5) * 4 - 1.5;
+  const drawRibbon = (ribbon, time) => {
+    context.beginPath();
+    for (let x = -40; x <= width + 40; x += 18) {
+      const wave =
+        Math.sin(x * 0.006 + time * ribbon.speed) * ribbon.amplitude +
+        Math.cos(x * 0.012 - time * ribbon.speed * 0.7) * ribbon.amplitude * 0.28;
+      const y = ribbon.y + wave + pointer.y * 28;
+      if (x === -40) {
+        context.moveTo(x, y);
+      } else {
+        context.lineTo(x, y);
       }
-      const dotGeometry = new THREE.BufferGeometry();
-      dotGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-      const dots = new THREE.Points(
-        dotGeometry,
-        new THREE.PointsMaterial({
-          color: 0x8aa7c7,
-          size: 0.026,
-          transparent: true,
-          opacity: 0.48,
-        })
-      );
-      scene.add(dots);
+    }
+    context.strokeStyle = `rgba(${ribbon.hue}, ${ribbon.alpha})`;
+    context.lineWidth = width < 720 ? 1 : 1.35;
+    context.stroke();
+  };
 
-      const resize = () => {
-        const rect = sceneCanvas.getBoundingClientRect();
-        renderer.setSize(rect.width, rect.height, false);
-        camera.aspect = rect.width / Math.max(rect.height, 1);
-        camera.updateProjectionMatrix();
+  const draw = (timeMs = 0) => {
+    const time = timeMs / 1000;
+    pointer.x += (target.x - pointer.x) * 0.045;
+    pointer.y += (target.y - pointer.y) * 0.045;
 
-        if (rect.width < 720) {
-          ringGroup.position.set(0.65, -0.65, -1.2);
-          ringGroup.scale.setScalar(0.78);
-          portraitGroup.visible = false;
-        } else {
-          ringGroup.position.set(1.9, 0.18, -0.8);
-          ringGroup.scale.setScalar(1);
-          portraitGroup.visible = true;
-        }
-      };
+    context.clearRect(0, 0, width, height);
 
-      const onPointerMove = (event) => {
-        const x = event.clientX / window.innerWidth - 0.5;
-        const y = event.clientY / window.innerHeight - 0.5;
-        target.set(x, y);
-      };
+    const gradient = context.createRadialGradient(
+      width * (0.68 + pointer.x * 0.06),
+      height * (0.26 + pointer.y * 0.06),
+      40,
+      width * 0.5,
+      height * 0.5,
+      Math.max(width, height)
+    );
+    gradient.addColorStop(0, "#263247");
+    gradient.addColorStop(0.38, "#11141d");
+    gradient.addColorStop(1, "#050608");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, width, height);
 
-      window.addEventListener("resize", resize);
-      window.addEventListener("pointermove", onPointerMove, { passive: true });
-      resize();
+    ribbons.forEach((ribbon) => drawRibbon(ribbon, reduceMotion ? 0 : time));
 
-      const animate = () => {
-        const elapsed = clock.getElapsedTime();
-        pointer.lerp(target, 0.055);
-
-        if (!reduceMotion) {
-          ringGroup.rotation.y = elapsed * 0.12 + pointer.x * 0.35;
-          ringGroup.rotation.x = pointer.y * 0.18;
-          portraitGroup.rotation.y = pointer.x * 0.16;
-          portraitGroup.rotation.x = -pointer.y * 0.1;
-          dots.rotation.y = elapsed * 0.025;
-          dots.rotation.x = pointer.y * 0.08;
-          camera.position.x = pointer.x * 0.28;
-          camera.position.y = 0.1 - pointer.y * 0.2;
-          camera.lookAt(0.4, 0, 0);
-        }
-
-        renderer.render(scene, camera);
-        requestAnimationFrame(animate);
-      };
-
-      animate();
-    })
-    .catch(() => {
-      sceneCanvas.classList.add("is-static");
+    stars.forEach((star) => {
+      const shimmer = reduceMotion ? 0 : Math.sin(time * 0.9 + star.phase) * 0.18;
+      const x = star.x + pointer.x * 44 * star.depth;
+      const y = star.y + pointer.y * 34 * star.depth;
+      context.beginPath();
+      context.fillStyle = `rgba(247, 247, 242, ${star.alpha + shimmer})`;
+      context.arc(x, y, star.radius, 0, Math.PI * 2);
+      context.fill();
     });
+
+    const glowX = width * 0.68 + pointer.x * 70;
+    const glowY = height * 0.46 + pointer.y * 56;
+    const glow = context.createRadialGradient(glowX, glowY, 12, glowX, glowY, Math.min(width, height) * 0.52);
+    glow.addColorStop(0, "rgba(125, 184, 255, 0.26)");
+    glow.addColorStop(0.42, "rgba(125, 184, 255, 0.08)");
+    glow.addColorStop(1, "rgba(125, 184, 255, 0)");
+    context.fillStyle = glow;
+    context.fillRect(0, 0, width, height);
+
+    requestAnimationFrame(draw);
+  };
+
+  window.addEventListener("resize", resize);
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      target.x = event.clientX / window.innerWidth - 0.5;
+      target.y = event.clientY / window.innerHeight - 0.5;
+    },
+    { passive: true }
+  );
+
+  resize();
+  requestAnimationFrame(draw);
 }
