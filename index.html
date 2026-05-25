@@ -28,7 +28,7 @@
     <link rel="icon" href="assets/profile-mark.svg" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
-  <body>
+  <body class="home-page">
     <a class="skip-link" href="#main">跳到正文</a>
     <header class="site-header">
       <a class="brand" href="index.html" aria-label="Kim 的首页">
@@ -47,7 +47,9 @@
     </header>
 
     <main id="main">
-      <section class="hero">
+      <section class="hero immersive-hero">
+        <canvas class="hero-scene" id="kim-3d-scene" aria-hidden="true"></canvas>
+        <div class="hero-glow" aria-hidden="true"></div>
         <div class="hero-copy">
           <p class="eyebrow">Nice to meet you</p>
           <h1>你好，我是Kim。一个喜欢观察生活，善于思考的人。</h1>
@@ -59,8 +61,9 @@
             <a class="button ghost" href="connect.html">来打个招呼</a>
           </div>
         </div>
-        <figure class="hero-visual">
+        <figure class="hero-portrait">
           <img src="assets/kim-avatar.jpg" alt="Kim 在街头的照片" />
+          <figcaption>Kim / Personal Field</figcaption>
         </figure>
       </section>
 
