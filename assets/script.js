@@ -4,6 +4,10 @@ const progressBar = document.querySelector(".scroll-progress span");
 const parallaxItems = document.querySelectorAll("[data-parallax]");
 const customCursor = document.querySelector(".interactive-cursor");
 const magneticItems = document.querySelectorAll(".magnetic-card");
+const mapBoard = document.querySelector(".map-board");
+const mapNodes = document.querySelectorAll(".map-node");
+const mapInspector = document.querySelector(".map-inspector");
+const mapInspectorClose = document.querySelector(".map-inspector-close");
 
 if (navToggle && siteNav) {
   navToggle.addEventListener("click", () => {
@@ -54,6 +58,75 @@ magneticItems.forEach((item) => {
     item.style.translate = "";
   });
 });
+
+if (mapBoard) {
+  mapBoard.addEventListener(
+    "pointermove",
+    (event) => {
+      const rect = mapBoard.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 100;
+      const y = ((event.clientY - rect.top) / rect.height) * 100;
+      mapBoard.style.setProperty("--map-x", `${x}%`);
+      mapBoard.style.setProperty("--map-y", `${y}%`);
+      mapBoard.classList.add("is-engaged");
+    },
+    { passive: true }
+  );
+
+  mapBoard.addEventListener("pointerleave", () => {
+    mapBoard.classList.remove("is-engaged");
+  });
+}
+
+const clearMapFocus = () => {
+  mapNodes.forEach((node) => node.classList.remove("is-active"));
+  document.querySelectorAll(".mind-card.is-focused").forEach((card) => {
+    card.classList.remove("is-focused");
+  });
+};
+
+const openMapInspector = (node, targetCard) => {
+  if (!mapInspector || !targetCard) {
+    return;
+  }
+
+  const title = targetCard.querySelector("h2")?.textContent?.trim() || node.textContent.trim();
+  const copy = targetCard.querySelector("p:not(.map-kicker)")?.textContent?.trim() || "";
+  const kicker = targetCard.querySelector(".map-kicker")?.textContent?.trim() || "Selected node";
+
+  mapInspector.querySelector(".map-kicker").textContent = kicker;
+  mapInspector.querySelector("h2").textContent = title;
+  mapInspector.querySelector("p:not(.map-kicker)").textContent = copy;
+  mapInspector.classList.add("is-open");
+};
+
+mapNodes.forEach((node) => {
+  node.addEventListener("click", (event) => {
+    const id = node.getAttribute("href");
+    const targetCard = id ? document.querySelector(id) : null;
+
+    if (!targetCard) {
+      return;
+    }
+
+    event.preventDefault();
+    clearMapFocus();
+    node.classList.add("is-active");
+    targetCard.classList.add("is-focused");
+    openMapInspector(node, targetCard);
+
+    window.setTimeout(() => {
+      targetCard.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 120);
+  });
+});
+
+if (mapInspectorClose && mapInspector) {
+  mapInspectorClose.addEventListener("click", () => {
+    mapInspector.classList.remove("is-open");
+    clearMapFocus();
+  });
+}
 
 const updateScrollProgress = () => {
   if (!progressBar) {
