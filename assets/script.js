@@ -221,21 +221,68 @@ if (fieldCanvas) {
     fieldCanvas.height = Math.floor(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-    const starCount = isMentalMap ? (width < 720 ? 170 : 340) : width < 720 ? 58 : 112;
-    stars = Array.from({ length: starCount }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      radius: isMentalMap ? randomBetween(0.45, 2.8) : randomBetween(0.7, 2.2),
-      depth: randomBetween(0.2, 1),
-      alpha: isMentalMap ? randomBetween(0.08, 0.58) : randomBetween(0.12, 0.5),
-      phase: Math.random() * Math.PI * 2,
-      color: isMentalMap
-        ? ["216, 111, 134", "157, 189, 146", "170, 203, 225", "194, 116, 83"][
-            Math.floor(Math.random() * 4)
-          ]
-        : null,
-      soft: isMentalMap && Math.random() > 0.82,
-    }));
+    const starCount = isMentalMap ? (width < 720 ? 290 : 620) : width < 720 ? 58 : 112;
+    const centerX = width * 0.52;
+    const centerY = height * 0.42;
+    const radiusX = Math.min(width, height) * (width < 720 ? 0.3 : 0.26);
+    const radiusY = Math.min(width, height) * (width < 720 ? 0.36 : 0.34);
+
+    stars = Array.from({ length: starCount }, () => {
+      if (!isMentalMap) {
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: randomBetween(0.7, 2.2),
+          depth: randomBetween(0.2, 1),
+          alpha: randomBetween(0.12, 0.5),
+          phase: Math.random() * Math.PI * 2,
+        };
+      }
+
+      const mode = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const jitterX = randomBetween(-26, 26);
+      const jitterY = randomBetween(-22, 22);
+      let x = Math.random() * width;
+      let y = Math.random() * height;
+      let color = "177, 51, 74";
+      let radius = randomBetween(0.75, 1.8);
+      let alpha = randomBetween(0.28, 0.72);
+      let soft = false;
+
+      if (mode < 0.56) {
+        const ring = randomBetween(0.88, 1.34);
+        x = centerX + Math.cos(angle) * radiusX * ring + jitterX;
+        y = centerY + Math.sin(angle) * radiusY * ring + jitterY;
+        color = Math.random() > 0.22 ? "177, 51, 74" : "203, 92, 112";
+        radius = randomBetween(0.55, 1.45);
+        alpha = randomBetween(0.34, 0.82);
+      } else if (mode < 0.8) {
+        x = centerX + randomBetween(-radiusX * 0.34, radiusX * 0.3) + Math.sin(angle) * 18;
+        y = centerY + randomBetween(-radiusY * 0.88, radiusY * 0.92);
+        color = Math.random() > 0.36 ? "152, 103, 48" : "188, 139, 72";
+        radius = randomBetween(0.8, 3.1);
+        alpha = randomBetween(0.22, 0.64);
+      } else if (mode < 0.92) {
+        x = centerX + Math.cos(angle) * radiusX * randomBetween(0.24, 0.76) + jitterX;
+        y = centerY + Math.sin(angle) * radiusY * randomBetween(0.2, 0.72) + jitterY;
+        color = Math.random() > 0.5 ? "120, 151, 176" : "157, 189, 146";
+        radius = randomBetween(1.6, 4.8);
+        alpha = randomBetween(0.08, 0.24);
+        soft = true;
+      }
+
+      return {
+        x,
+        y,
+        radius,
+        depth: randomBetween(0.2, 1),
+        alpha,
+        phase: Math.random() * Math.PI * 2,
+        color,
+        soft,
+      };
+    });
 
     blots = isMentalMap
       ? Array.from({ length: width < 720 ? 8 : 14 }, () => ({
@@ -311,6 +358,19 @@ if (fieldCanvas) {
     ribbons.forEach((ribbon) => drawRibbon(ribbon, reduceMotion ? 0 : time));
 
     if (isMentalMap) {
+      const ovalX = width * 0.52 + pointer.x * 26;
+      const ovalY = height * 0.42 + pointer.y * 20;
+      const ovalRadiusX = Math.min(width, height) * (width < 720 ? 0.31 : 0.27);
+      const ovalRadiusY = Math.min(width, height) * (width < 720 ? 0.37 : 0.35);
+
+      context.save();
+      context.filter = "blur(18px)";
+      context.beginPath();
+      context.fillStyle = "rgba(150, 181, 202, 0.34)";
+      context.ellipse(ovalX, ovalY, ovalRadiusX, ovalRadiusY, -0.08, 0, Math.PI * 2);
+      context.fill();
+      context.restore();
+
       context.save();
       context.filter = "blur(18px)";
       blots.forEach((blot) => {
