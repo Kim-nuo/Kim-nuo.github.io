@@ -8,6 +8,18 @@ const mapBoard = document.querySelector(".map-board");
 const mapNodes = document.querySelectorAll(".map-node");
 const mapInspector = document.querySelector(".map-inspector");
 const mapInspectorClose = document.querySelector(".map-inspector-close");
+const isMentalMapPage = document.body.classList.contains("mental-map-home");
+
+if (isMentalMapPage) {
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      document.body.style.setProperty("--pointer-x", `${event.clientX}px`);
+      document.body.style.setProperty("--pointer-y", `${event.clientY}px`);
+    },
+    { passive: true }
+  );
+}
 
 if (navToggle && siteNav) {
   navToggle.addEventListener("click", () => {
@@ -197,6 +209,7 @@ if (fieldCanvas) {
   let height = 0;
   let stars = [];
   let ribbons = [];
+  let blots = [];
 
   const randomBetween = (min, max) => Math.random() * (max - min) + min;
 
@@ -208,15 +221,34 @@ if (fieldCanvas) {
     fieldCanvas.height = Math.floor(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-    const starCount = width < 720 ? 58 : 112;
+    const starCount = isMentalMap ? (width < 720 ? 170 : 340) : width < 720 ? 58 : 112;
     stars = Array.from({ length: starCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      radius: randomBetween(0.7, 2.2),
+      radius: isMentalMap ? randomBetween(0.45, 2.8) : randomBetween(0.7, 2.2),
       depth: randomBetween(0.2, 1),
-      alpha: randomBetween(0.12, 0.5),
+      alpha: isMentalMap ? randomBetween(0.08, 0.58) : randomBetween(0.12, 0.5),
       phase: Math.random() * Math.PI * 2,
+      color: isMentalMap
+        ? ["216, 111, 134", "157, 189, 146", "170, 203, 225", "194, 116, 83"][
+            Math.floor(Math.random() * 4)
+          ]
+        : null,
+      soft: isMentalMap && Math.random() > 0.82,
     }));
+
+    blots = isMentalMap
+      ? Array.from({ length: width < 720 ? 8 : 14 }, () => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: randomBetween(52, 160),
+          alpha: randomBetween(0.055, 0.16),
+          color: ["216, 111, 134", "157, 189, 146", "170, 203, 225"][
+            Math.floor(Math.random() * 3)
+          ],
+          phase: Math.random() * Math.PI * 2,
+        }))
+      : [];
 
     ribbons = Array.from({ length: isMentalMap ? 6 : 4 }, (_, index) => ({
       y: height * randomBetween(0.18, 0.88),
@@ -278,24 +310,50 @@ if (fieldCanvas) {
 
     ribbons.forEach((ribbon) => drawRibbon(ribbon, reduceMotion ? 0 : time));
 
+    if (isMentalMap) {
+      context.save();
+      context.filter = "blur(18px)";
+      blots.forEach((blot) => {
+        const float = reduceMotion ? 0 : Math.sin(time * 0.16 + blot.phase) * 18;
+        const x = blot.x + pointer.x * 60 + float;
+        const y = blot.y + pointer.y * 44 - float * 0.35;
+        const wash = context.createRadialGradient(x, y, 2, x, y, blot.radius);
+        wash.addColorStop(0, `rgba(${blot.color}, ${blot.alpha})`);
+        wash.addColorStop(1, `rgba(${blot.color}, 0)`);
+        context.fillStyle = wash;
+        context.beginPath();
+        context.arc(x, y, blot.radius, 0, Math.PI * 2);
+        context.fill();
+      });
+      context.restore();
+    }
+
     stars.forEach((star) => {
       const shimmer = reduceMotion ? 0 : Math.sin(time * 0.9 + star.phase) * 0.18;
       const x = star.x + pointer.x * 44 * star.depth;
       const y = star.y + pointer.y * 34 * star.depth;
+      if (isMentalMap && star.soft) {
+        context.save();
+        context.filter = "blur(5px)";
+      }
       context.beginPath();
       context.fillStyle = isMentalMap
-        ? `rgba(${star.depth > 0.68 ? "216, 111, 134" : "96, 124, 112"}, ${0.12 + star.alpha * 0.52 + shimmer * 0.3})`
+        ? `rgba(${star.color}, ${0.11 + star.alpha * 0.56 + shimmer * 0.28})`
         : `rgba(247, 247, 242, ${star.alpha + shimmer})`;
       context.arc(x, y, star.radius, 0, Math.PI * 2);
       context.fill();
+      if (isMentalMap && star.soft) {
+        context.restore();
+      }
     });
 
-    const glowX = width * 0.68 + pointer.x * 70;
-    const glowY = height * 0.46 + pointer.y * 56;
+    const glowX = isMentalMap ? width * (0.5 + pointer.x) : width * 0.68 + pointer.x * 70;
+    const glowY = isMentalMap ? height * (0.5 + pointer.y) : height * 0.46 + pointer.y * 56;
     const glow = context.createRadialGradient(glowX, glowY, 12, glowX, glowY, Math.min(width, height) * 0.52);
     if (isMentalMap) {
-      glow.addColorStop(0, "rgba(216, 111, 134, 0.16)");
-      glow.addColorStop(0.42, "rgba(170, 203, 225, 0.1)");
+      glow.addColorStop(0, "rgba(216, 111, 134, 0.28)");
+      glow.addColorStop(0.28, "rgba(170, 203, 225, 0.16)");
+      glow.addColorStop(0.56, "rgba(157, 189, 146, 0.1)");
       glow.addColorStop(1, "rgba(157, 189, 146, 0)");
     } else {
       glow.addColorStop(0, "rgba(125, 184, 255, 0.26)");
