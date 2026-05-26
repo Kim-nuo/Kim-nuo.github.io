@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kim - A Quiet Film</title>
+    <title>Kim - 精神地图</title>
     <meta
       name="description"
-      content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
+      content="一张关于关系、自我、独处、表达和生命力的个人精神地图。"
     />
-    <meta property="og:title" content="Kim - A Quiet Film" />
+    <meta property="og:title" content="Kim - 精神地图" />
     <meta
       property="og:description"
-      content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
+      content="一张关于关系、自我、独处、表达和生命力的个人精神地图。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://kim-nuo.github.io/" />
@@ -19,22 +19,22 @@
     <meta property="og:image:alt" content="Kim 在街头的照片" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Kim - A Quiet Film" />
+    <meta name="twitter:title" content="Kim - 精神地图" />
     <meta
       name="twitter:description"
-      content="与大家一起慢慢找到自己，慢慢认识自己，慢慢变好。"
+      content="一张关于关系、自我、独处、表达和生命力的个人精神地图。"
     />
     <meta name="twitter:image" content="https://kim-nuo.github.io/assets/kim-avatar.jpg" />
     <link rel="icon" href="assets/profile-mark.svg" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
-  <body class="cinema-home">
+  <body class="mental-map-home">
     <a class="skip-link" href="#main">跳到正文</a>
-    <canvas class="field-canvas cinema-canvas" id="field-canvas" aria-hidden="true"></canvas>
-    <div class="film-grain" aria-hidden="true"></div>
-    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+    <canvas class="field-canvas map-canvas" id="field-canvas" aria-hidden="true"></canvas>
+    <div class="interactive-cursor" aria-hidden="true"></div>
+    <div class="map-noise" aria-hidden="true"></div>
 
-    <header class="site-header cinema-nav">
+    <header class="site-header map-nav">
       <a class="brand" href="index.html" aria-label="Kim 的首页">
         <img src="assets/kim-avatar.jpg" alt="" />
         <span>Kim</span>
@@ -43,93 +43,121 @@
         菜单
       </button>
       <nav class="site-nav" id="site-nav" aria-label="主导航">
-        <a href="#opening">开场</a>
-        <a href="#scenes">片段</a>
+        <a href="#map">地图</a>
+        <a href="#nodes">节点</a>
         <a href="about.html">关于我</a>
         <a href="connect.html">联系</a>
       </nav>
     </header>
 
     <main id="main">
-      <section class="cinema-hero" id="opening">
-        <div class="hero-frame" data-parallax>
-          <img src="assets/kim-avatar.jpg" alt="Kim 在街头的照片" />
-        </div>
-        <div class="hero-shade" aria-hidden="true"></div>
-        <div class="hero-caption" data-reveal>
-          <p class="film-kicker">A quiet film about Kim</p>
-          <h1>你好，我是 Kim。</h1>
+      <section class="map-hero" id="map">
+        <div class="map-hero-copy" data-reveal>
+          <p class="map-kicker">Personal mind map</p>
+          <h1>欢迎进入 Kim 的精神地图。</h1>
           <p>
-            一个喜欢观察生活，善于思考的人。与大家一起慢慢找到自己，
-            慢慢认识自己，慢慢变好。
+            这里记录一些我反复思考的事：关系、自我、痛苦、独处、表达，
+            以及如何慢慢成为更清楚的人。
           </p>
         </div>
-        <div class="hero-side-note" data-reveal>
-          <span>01</span>
-          <strong>不是简历，是一个人正在靠近自己的过程。</strong>
+
+        <div class="map-board" aria-label="Kim 的精神地图节点">
+          <figure class="map-portrait magnetic-card" data-reveal>
+            <img src="assets/kim-avatar.jpg" alt="Kim 在街头的照片" />
+            <figcaption>center / Kim</figcaption>
+          </figure>
+
+          <a class="map-node node-relationship magnetic-card" href="#relationship">
+            <span>01</span>
+            <strong>人与关系</strong>
+          </a>
+          <a class="map-node node-self magnetic-card" href="#self">
+            <span>02</span>
+            <strong>矛盾与自我</strong>
+          </a>
+          <a class="map-node node-alone magnetic-card" href="#alone">
+            <span>03</span>
+            <strong>独处与恢复</strong>
+          </a>
+          <a class="map-node node-expression magnetic-card" href="#expression">
+            <span>04</span>
+            <strong>表达与确认</strong>
+          </a>
+          <a class="map-node node-life magnetic-card" href="#life">
+            <span>05</span>
+            <strong>有生命力的事物</strong>
+          </a>
         </div>
       </section>
 
-      <section class="cinema-statement" data-reveal>
+      <section class="map-thesis" data-reveal>
         <p>
-          我一直在学习把复杂的感受讲清楚：有时候是对人的理解，有时候是对自己的复盘，
-          有时候只是想在一个安静的下午，确认自己仍然保留着感受生活的能力。
+          比起用几个标签快速定义自己，我更想把自己摊开成一张地图：
+          有些区域清晰，有些区域还在雾里，但每一个节点都真实地影响着我。
         </p>
       </section>
 
-      <section class="cinema-tags" aria-label="快速认识 Kim" data-reveal>
-        <span>喜欢观察人</span>
-        <span>爱尝试，但坚持困难</span>
-        <span>包容性极强，接受一切</span>
-        <span>愿意倾听</span>
-      </section>
-
-      <section class="scene-strip" id="scenes">
-        <article class="scene-card wide" data-reveal>
-          <div>
-            <p class="film-kicker">Scene 01 / Listening</p>
-            <h2>人与人之间的靠近，很多时候来自被准确地听见。</h2>
-          </div>
+      <section class="map-node-list" id="nodes" aria-label="精神地图内容节点">
+        <article class="mind-card" id="relationship" data-reveal>
+          <p class="map-kicker">01 / Relationship</p>
+          <h2>人与关系</h2>
           <p>
-            跟很多不同的人对话后，我开始更频繁地记录别人说话时的停顿、犹豫和期待。
-            我在意那些没有被直接说出口的部分。
+            我很在意人与人之间细微的理解。很多关系的靠近不是靠热闹，
+            而是靠被准确地听见。
           </p>
         </article>
 
-        <article class="scene-card image-card" data-reveal>
+        <article class="mind-card offset" id="self" data-reveal>
+          <p class="map-kicker">02 / Self</p>
+          <h2>矛盾与自我</h2>
+          <p>
+            我常常用矛盾来形容自己。它带来焦虑，也让我不断复盘自己真实的想法和选择。
+          </p>
+        </article>
+
+        <article class="mind-card with-image" id="alone" data-reveal>
           <img src="assets/kim-avatar.jpg" alt="街头照片局部" />
           <div>
-            <p class="film-kicker">Scene 02 / Alone</p>
-            <h2>一个人独处，是我整理自己的方式。</h2>
+            <p class="map-kicker">03 / Alone</p>
+            <h2>独处与恢复</h2>
             <p>
-              咖啡厅、艺术馆、静静看书、思考、看展。它们像某种出口，
-              帮我和矛盾焦虑的内心慢慢相处。
+              咖啡厅、艺术馆、阅读、看展，是我整理自己的方式，
+              也是我和自己慢慢和解的出口。
             </p>
           </div>
         </article>
 
-        <article class="scene-card" data-reveal>
-          <p class="film-kicker">Scene 03 / Becoming</p>
-          <h2>我想知道：怎样才算把生活过得更像自己？</h2>
+        <article class="mind-card offset" id="expression" data-reveal>
+          <p class="map-kicker">04 / Expression</p>
+          <h2>表达与确认</h2>
           <p>
-            这个问题没有标准答案。现在我给自己的版本是：保留好奇，
-            保留边界，也保留一点愿意重新开始的勇气。
+            我曾经害怕表达不够成熟。后来发现勇敢说出当下的想法，
+            才能让别人了解你，也能让模糊得到确认。
+          </p>
+        </article>
+
+        <article class="mind-card" id="life" data-reveal>
+          <p class="map-kicker">05 / Vitality</p>
+          <h2>我想靠近的东西</h2>
+          <p>
+            有生命力的人和事，真诚的回答，经过思考后的表达，
+            会让我感到自己被轻轻唤醒。
           </p>
         </article>
       </section>
 
-      <section class="cinema-connect" data-reveal>
-        <p class="film-kicker">Final scene</p>
-        <h2>如果你也喜欢进行有深度的讨论，可以来找我。</h2>
-        <div class="connect-actions">
+      <section class="map-ending" data-reveal>
+        <p class="map-kicker">Connection</p>
+        <h2>如果你也喜欢认真讨论一些真实的问题，可以来找我。</h2>
+        <div class="map-actions">
           <a class="button primary" href="connect.html">联系 Kim</a>
-          <a class="button ghost" href="likes.html">从兴趣开始聊</a>
+          <a class="button ghost" href="likes.html">从兴趣开始</a>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer cinema-footer">
-      <p>Kim - A Quiet Film</p>
+    <footer class="site-footer map-footer">
+      <p>Kim - 精神地图</p>
       <a href="https://kim-nuo.github.io/">kim-nuo.github.io</a>
     </footer>
 
