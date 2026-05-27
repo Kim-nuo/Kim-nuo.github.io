@@ -9,6 +9,7 @@ const mapNodes = document.querySelectorAll(".map-node");
 const mapInspector = document.querySelector(".map-inspector");
 const mapInspectorClose = document.querySelector(".map-inspector-close");
 const isMentalMapPage = document.body.classList.contains("mental-map-home");
+const paperFragments = document.querySelectorAll(".paper-fragment");
 
 if (isMentalMapPage) {
   window.addEventListener(
@@ -139,6 +140,20 @@ if (mapInspectorClose && mapInspector) {
     clearMapFocus();
   });
 }
+
+paperFragments.forEach((fragment) => {
+  fragment.addEventListener(
+    "pointermove",
+    (event) => {
+      const rect = fragment.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 100;
+      const y = ((event.clientY - rect.top) / rect.height) * 100;
+      fragment.style.setProperty("--shine-x", `${x}%`);
+      fragment.style.setProperty("--shine-y", `${y}%`);
+    },
+    { passive: true }
+  );
+});
 
 const updateScrollProgress = () => {
   if (!progressBar) {
