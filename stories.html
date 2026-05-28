@@ -8,9 +8,13 @@
     <link rel="icon" href="assets/profile-mark.svg" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
-  <body>
+  <body class="mental-map-home stories-map-page">
     <a class="skip-link" href="#main">跳到正文</a>
-    <header class="site-header">
+    <canvas class="field-canvas map-canvas" id="field-canvas" aria-hidden="true"></canvas>
+    <div class="interactive-cursor" aria-hidden="true"></div>
+    <div class="map-noise" aria-hidden="true"></div>
+
+    <header class="site-header map-nav">
       <a class="brand" href="index.html" aria-label="Kim 的首页">
         <img src="assets/kim-avatar.jpg" alt="" />
         <span>Kim</span>
@@ -19,52 +23,60 @@
         菜单
       </button>
       <nav class="site-nav" id="site-nav" aria-label="主导航">
-        <a href="about.html">关于我</a>
+        <a href="index.html#map">地图</a>
+        <a href="index.html#photos">照片</a>
         <a href="stories.html" aria-current="page">经历</a>
-        <a href="likes.html">兴趣</a>
+        <a href="about.html">关于我</a>
         <a href="connect.html">联系</a>
       </nav>
     </header>
 
-    <main id="main" class="page">
-      <section class="page-heading">
-        <p class="eyebrow">Stories</p>
+    <main id="main" class="story-map">
+      <section class="story-hero" data-reveal>
+        <p class="map-kicker">Stories</p>
         <h1>不是履历时间线，是一些让我变成现在这样的生活片段。</h1>
+        <p>
+          它们不负责证明什么，只是记录某些我反复想起的时刻：
+          理解、独处、表达，以及还没有完全想明白的生活问题。
+        </p>
       </section>
 
-      <section class="story-list" aria-label="生活故事">
-        <article class="story-card">
-          <p class="story-time">某个转变发生的时候</p>
+      <section class="story-fragment-list" aria-label="生活故事">
+        <article class="story-fragment magnetic-card" data-reveal>
+          <p class="map-kicker">01 / Relationship</p>
           <h2>第一次认真意识到：我其实很在意人与人之间的理解。</h2>
           <p>
-            跟很多不同的人对话后，我开始更频繁地记录别人说话时的停顿、犹豫和期待。后来我发现，很多关系的靠近都不是靠热闹，而是靠被准确地听见。
+            跟很多不同的人对话后，我开始更频繁地记录别人说话时的停顿、犹豫和期待。后来我发现，
+            很多关系的靠近都不是靠热闹，而是靠被准确地听见。
           </p>
         </article>
-        <article class="story-card">
-          <p class="story-time">一段日常习惯</p>
-          <h2>一个人独处是我整理自己的方式</h2>
+        <article class="story-fragment magnetic-card" data-reveal>
+          <p class="map-kicker">02 / Alone</p>
+          <h2>一个人独处是我整理自己的方式。</h2>
           <p>
-            我喜欢一个人在咖啡厅，艺术馆，静静看书，思考，看展。同时这也是我对抗自己矛盾焦虑内心的排解方式。
+            我喜欢一个人在咖啡厅、艺术馆，静静看书、思考、看展。同时这也是我对抗自己矛盾焦虑内心的排解方式。
           </p>
         </article>
-        <article class="story-card">
-          <p class="story-time">一次小小的尝试</p>
+        <article class="story-fragment magnetic-card" data-reveal>
+          <p class="map-kicker">03 / Expression</p>
           <h2>把一个想法说出来，比一直放在心里更有力量。</h2>
           <p>
-            我曾经以为表达必须足够成熟才值得被说出口，总觉得词不达意所以闭口不谈，后来发现勇敢地表达出当下的想法，才能让别人了解你，也会及时避免误解和让一些模糊得到确认。
+            我曾经以为表达必须足够成熟才值得被说出口，总觉得词不达意所以闭口不谈。后来发现勇敢地表达出当下的想法，
+            才能让别人了解你，也会及时避免误解和让一些模糊得到确认。
           </p>
         </article>
-        <article class="story-card">
-          <p class="story-time">一个正在继续的问题</p>
+        <article class="story-fragment magnetic-card" data-reveal>
+          <p class="map-kicker">04 / Question</p>
           <h2>我想知道：怎样才算把生活过得更像自己？</h2>
           <p>
-            求而不得的痛苦不断反刍情绪，这个问题没有标准答案。现在我给自己的版本是：保留好奇，保留边界，也保留一点愿意重新开始的勇气。
+            求而不得的痛苦不断反刍情绪，这个问题没有标准答案。现在我给自己的版本是：
+            保留好奇，保留边界，也保留一点愿意重新开始的勇气。
           </p>
         </article>
       </section>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer map-footer">
       <p>Made for softer first hellos.</p>
       <a href="connect.html">联系 Kim</a>
     </footer>

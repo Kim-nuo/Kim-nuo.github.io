@@ -10,13 +10,28 @@ const mapInspector = document.querySelector(".map-inspector");
 const mapInspectorClose = document.querySelector(".map-inspector-close");
 const isMentalMapPage = document.body.classList.contains("mental-map-home");
 const paperFragments = document.querySelectorAll(".paper-fragment");
+const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
 if (isMentalMapPage) {
+  let pointerFrame = 0;
+  let pointerX = window.innerWidth / 2;
+  let pointerY = window.innerHeight / 2;
+
   window.addEventListener(
     "pointermove",
     (event) => {
-      document.body.style.setProperty("--pointer-x", `${event.clientX}px`);
-      document.body.style.setProperty("--pointer-y", `${event.clientY}px`);
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+
+      if (pointerFrame) {
+        return;
+      }
+
+      pointerFrame = requestAnimationFrame(() => {
+        document.body.style.setProperty("--pointer-x", `${pointerX}px`);
+        document.body.style.setProperty("--pointer-y", `${pointerY}px`);
+        pointerFrame = 0;
+      });
     },
     { passive: true }
   );
@@ -29,7 +44,11 @@ if (navToggle && siteNav) {
   });
 }
 
-if (customCursor) {
+if (customCursor && isCoarsePointer) {
+  customCursor.hidden = true;
+}
+
+if (customCursor && !isCoarsePointer) {
   let cursorX = window.innerWidth / 2;
   let cursorY = window.innerHeight / 2;
   let targetX = cursorX;
@@ -52,7 +71,9 @@ if (customCursor) {
   const moveCursor = () => {
     cursorX += (targetX - cursorX) * 0.22;
     cursorY += (targetY - cursorY) * 0.22;
-    customCursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+    if (!document.hidden) {
+      customCursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
+    }
     requestAnimationFrame(moveCursor);
   };
 
@@ -60,12 +81,16 @@ if (customCursor) {
 }
 
 magneticItems.forEach((item) => {
-  item.addEventListener("pointermove", (event) => {
-    const rect = item.getBoundingClientRect();
-    const x = event.clientX - rect.left - rect.width / 2;
-    const y = event.clientY - rect.top - rect.height / 2;
-    item.style.translate = `${x * 0.08}px ${y * 0.08}px`;
-  });
+  item.addEventListener(
+    "pointermove",
+    (event) => {
+      const rect = item.getBoundingClientRect();
+      const x = event.clientX - rect.left - rect.width / 2;
+      const y = event.clientY - rect.top - rect.height / 2;
+      item.style.translate = `${x * 0.08}px ${y * 0.08}px`;
+    },
+    { passive: true }
+  );
 
   item.addEventListener("pointerleave", () => {
     item.style.translate = "";
@@ -225,18 +250,21 @@ if (fieldCanvas) {
   let stars = [];
   let ribbons = [];
   let blots = [];
+  let lastDrawTime = 0;
+  let animationPaused = document.hidden;
+  const frameInterval = isMentalMap ? 33 : 16;
 
   const randomBetween = (min, max) => Math.random() * (max - min) + min;
 
   const resize = () => {
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    const ratio = Math.min(window.devicePixelRatio || 1, isMentalMap ? 1.25 : 1.6);
     width = window.innerWidth;
     height = window.innerHeight;
     fieldCanvas.width = Math.floor(width * ratio);
     fieldCanvas.height = Math.floor(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-    const starCount = isMentalMap ? (width < 720 ? 170 : 340) : width < 720 ? 58 : 112;
+    const starCount = isMentalMap ? (width < 720 ? 72 : 160) : width < 720 ? 48 : 96;
     stars = Array.from({ length: starCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
@@ -253,11 +281,11 @@ if (fieldCanvas) {
     }));
 
     blots = isMentalMap
-      ? Array.from({ length: width < 720 ? 8 : 14 }, () => ({
+      ? Array.from({ length: width < 720 ? 4 : 7 }, () => ({
           x: Math.random() * width,
           y: Math.random() * height,
-          radius: randomBetween(52, 160),
-          alpha: randomBetween(0.055, 0.16),
+          radius: randomBetween(54, 138),
+          alpha: randomBetween(0.05, 0.13),
           color: ["216, 111, 134", "157, 189, 146", "170, 203, 225"][
             Math.floor(Math.random() * 3)
           ],
@@ -265,7 +293,7 @@ if (fieldCanvas) {
         }))
       : [];
 
-    ribbons = Array.from({ length: isMentalMap ? 6 : 4 }, (_, index) => ({
+    ribbons = Array.from({ length: isMentalMap ? 4 : 4 }, (_, index) => ({
       y: height * randomBetween(0.18, 0.88),
       amplitude: isMentalMap ? randomBetween(24, 72) : randomBetween(38, 110),
       speed: randomBetween(0.08, 0.24) * (index % 2 === 0 ? 1 : -1),
@@ -276,6 +304,7 @@ if (fieldCanvas) {
           ? "125, 184, 255"
           : "255, 255, 255",
     }));
+    lastDrawTime = 0;
   };
 
   const drawRibbon = (ribbon, time) => {
@@ -297,6 +326,18 @@ if (fieldCanvas) {
   };
 
   const draw = (timeMs = 0) => {
+    requestAnimationFrame(draw);
+    if (animationPaused) {
+      return;
+    }
+    if (reduceMotion && lastDrawTime > 0) {
+      return;
+    }
+    if (!reduceMotion && timeMs - lastDrawTime < frameInterval) {
+      return;
+    }
+    lastDrawTime = timeMs;
+
     const time = timeMs / 1000;
     pointer.x += (target.x - pointer.x) * 0.045;
     pointer.y += (target.y - pointer.y) * 0.045;
@@ -327,7 +368,7 @@ if (fieldCanvas) {
 
     if (isMentalMap) {
       context.save();
-      context.filter = "blur(18px)";
+      context.filter = "blur(10px)";
       blots.forEach((blot) => {
         const float = reduceMotion ? 0 : Math.sin(time * 0.16 + blot.phase) * 18;
         const x = blot.x + pointer.x * 60 + float;
@@ -349,7 +390,7 @@ if (fieldCanvas) {
       const y = star.y + pointer.y * 34 * star.depth;
       if (isMentalMap && star.soft) {
         context.save();
-        context.filter = "blur(5px)";
+        context.filter = "blur(3px)";
       }
       context.beginPath();
       context.fillStyle = isMentalMap
@@ -378,10 +419,12 @@ if (fieldCanvas) {
     context.fillStyle = glow;
     context.fillRect(0, 0, width, height);
 
-    requestAnimationFrame(draw);
   };
 
   window.addEventListener("resize", resize);
+  document.addEventListener("visibilitychange", () => {
+    animationPaused = document.hidden;
+  });
   window.addEventListener(
     "pointermove",
     (event) => {
