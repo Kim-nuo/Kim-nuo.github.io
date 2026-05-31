@@ -12,7 +12,7 @@ const isMentalMapPage = document.body.classList.contains("mental-map-home");
 const paperFragments = document.querySelectorAll(".paper-fragment");
 const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
-if (isMentalMapPage) {
+if (isMentalMapPage && !isCoarsePointer) {
   let pointerFrame = 0;
   let pointerX = window.innerWidth / 2;
   let pointerY = window.innerHeight / 2;
@@ -49,16 +49,22 @@ if (customCursor && isCoarsePointer) {
 }
 
 if (customCursor && !isCoarsePointer) {
-  let cursorX = window.innerWidth / 2;
-  let cursorY = window.innerHeight / 2;
-  let targetX = cursorX;
-  let targetY = cursorY;
+  let cursorFrame = 0;
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight / 2;
 
   window.addEventListener(
     "pointermove",
     (event) => {
       targetX = event.clientX;
       targetY = event.clientY;
+      if (cursorFrame) {
+        return;
+      }
+      cursorFrame = requestAnimationFrame(() => {
+        customCursor.style.transform = `translate3d(${targetX}px, ${targetY}px, 0) translate(-50%, -50%)`;
+        cursorFrame = 0;
+      });
     },
     { passive: true }
   );
@@ -68,16 +74,7 @@ if (customCursor && !isCoarsePointer) {
     item.addEventListener("pointerleave", () => customCursor.classList.remove("is-active"));
   });
 
-  const moveCursor = () => {
-    cursorX += (targetX - cursorX) * 0.22;
-    cursorY += (targetY - cursorY) * 0.22;
-    if (!document.hidden) {
-      customCursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%)`;
-    }
-    requestAnimationFrame(moveCursor);
-  };
-
-  moveCursor();
+  customCursor.style.transform = `translate3d(${targetX}px, ${targetY}px, 0) translate(-50%, -50%)`;
 }
 
 magneticItems.forEach((item) => {
@@ -98,14 +95,23 @@ magneticItems.forEach((item) => {
 });
 
 if (mapBoard) {
+  let mapFrame = 0;
+  let mapX = 50;
+  let mapY = 50;
+
   mapBoard.addEventListener(
     "pointermove",
     (event) => {
       const rect = mapBoard.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-      mapBoard.style.setProperty("--map-x", `${x}%`);
-      mapBoard.style.setProperty("--map-y", `${y}%`);
+      mapX = ((event.clientX - rect.left) / rect.width) * 100;
+      mapY = ((event.clientY - rect.top) / rect.height) * 100;
+      if (!mapFrame) {
+        mapFrame = requestAnimationFrame(() => {
+          mapBoard.style.setProperty("--map-x", `${mapX}%`);
+          mapBoard.style.setProperty("--map-y", `${mapY}%`);
+          mapFrame = 0;
+        });
+      }
       mapBoard.classList.add("is-engaged");
     },
     { passive: true }
@@ -252,19 +258,19 @@ if (fieldCanvas) {
   let blots = [];
   let lastDrawTime = 0;
   let animationPaused = document.hidden;
-  const frameInterval = isMentalMap ? 33 : 16;
+  const frameInterval = isMentalMap ? 66 : 16;
 
   const randomBetween = (min, max) => Math.random() * (max - min) + min;
 
   const resize = () => {
-    const ratio = Math.min(window.devicePixelRatio || 1, isMentalMap ? 1.25 : 1.6);
+    const ratio = Math.min(window.devicePixelRatio || 1, isMentalMap ? 1 : 1.6);
     width = window.innerWidth;
     height = window.innerHeight;
     fieldCanvas.width = Math.floor(width * ratio);
     fieldCanvas.height = Math.floor(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-    const starCount = isMentalMap ? (width < 720 ? 72 : 160) : width < 720 ? 48 : 96;
+    const starCount = isMentalMap ? (width < 720 ? 42 : 86) : width < 720 ? 48 : 96;
     stars = Array.from({ length: starCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
@@ -281,11 +287,11 @@ if (fieldCanvas) {
     }));
 
     blots = isMentalMap
-      ? Array.from({ length: width < 720 ? 4 : 7 }, () => ({
+      ? Array.from({ length: width < 720 ? 3 : 4 }, () => ({
           x: Math.random() * width,
           y: Math.random() * height,
-          radius: randomBetween(54, 138),
-          alpha: randomBetween(0.05, 0.13),
+          radius: randomBetween(50, 118),
+          alpha: randomBetween(0.04, 0.1),
           color: ["216, 111, 134", "157, 189, 146", "170, 203, 225"][
             Math.floor(Math.random() * 3)
           ],
@@ -293,9 +299,9 @@ if (fieldCanvas) {
         }))
       : [];
 
-    ribbons = Array.from({ length: isMentalMap ? 4 : 4 }, (_, index) => ({
+    ribbons = Array.from({ length: isMentalMap ? 3 : 4 }, (_, index) => ({
       y: height * randomBetween(0.18, 0.88),
-      amplitude: isMentalMap ? randomBetween(24, 72) : randomBetween(38, 110),
+      amplitude: isMentalMap ? randomBetween(18, 52) : randomBetween(38, 110),
       speed: randomBetween(0.08, 0.24) * (index % 2 === 0 ? 1 : -1),
       alpha: isMentalMap ? randomBetween(0.1, 0.22) : randomBetween(0.08, 0.16),
       hue: isMentalMap
@@ -309,7 +315,8 @@ if (fieldCanvas) {
 
   const drawRibbon = (ribbon, time) => {
     context.beginPath();
-    for (let x = -40; x <= width + 40; x += 18) {
+    const step = isMentalMap ? 34 : 18;
+    for (let x = -40; x <= width + 40; x += step) {
       const wave =
         Math.sin(x * 0.006 + time * ribbon.speed) * ribbon.amplitude +
         Math.cos(x * 0.012 - time * ribbon.speed * 0.7) * ribbon.amplitude * 0.28;
@@ -368,7 +375,7 @@ if (fieldCanvas) {
 
     if (isMentalMap) {
       context.save();
-      context.filter = "blur(10px)";
+      context.filter = "blur(6px)";
       blots.forEach((blot) => {
         const float = reduceMotion ? 0 : Math.sin(time * 0.16 + blot.phase) * 18;
         const x = blot.x + pointer.x * 60 + float;
@@ -388,19 +395,12 @@ if (fieldCanvas) {
       const shimmer = reduceMotion ? 0 : Math.sin(time * 0.9 + star.phase) * 0.18;
       const x = star.x + pointer.x * 44 * star.depth;
       const y = star.y + pointer.y * 34 * star.depth;
-      if (isMentalMap && star.soft) {
-        context.save();
-        context.filter = "blur(3px)";
-      }
       context.beginPath();
       context.fillStyle = isMentalMap
         ? `rgba(${star.color}, ${0.11 + star.alpha * 0.56 + shimmer * 0.28})`
         : `rgba(247, 247, 242, ${star.alpha + shimmer})`;
       context.arc(x, y, star.radius, 0, Math.PI * 2);
       context.fill();
-      if (isMentalMap && star.soft) {
-        context.restore();
-      }
     });
 
     const glowX = isMentalMap ? width * (0.5 + pointer.x) : width * 0.68 + pointer.x * 70;

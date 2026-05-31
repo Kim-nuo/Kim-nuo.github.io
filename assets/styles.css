@@ -4042,3 +4042,69 @@ h3 {
 .map-footer a {
   color: var(--map-ink);
 }
+
+/* Performance tuning: keep the emotional motion, but make the heavy layers cheaper. */
+.mental-map-home::before {
+  filter: blur(24px);
+  opacity: 0.72;
+  animation-duration: 28s;
+}
+
+.mental-map-home::after {
+  filter: blur(14px);
+  mix-blend-mode: normal;
+  opacity: 0.42;
+}
+
+.map-canvas {
+  opacity: 0.42;
+}
+
+.map-board,
+.mind-card,
+.paper-fragment,
+.map-inspector {
+  backdrop-filter: blur(7px) saturate(106%);
+}
+
+.map-node,
+.alone-fragment > div,
+.memory-photo figcaption {
+  backdrop-filter: blur(6px) saturate(106%);
+}
+
+.paper-fragment:hover,
+.paper-fragment.is-focused {
+  transform: rotate(0deg) translateY(-16px) scale(1.018);
+  box-shadow:
+    0 34px 92px rgba(124, 126, 116, 0.18),
+    0 0 0 8px rgba(255, 255, 255, 0.22),
+    0 0 38px rgba(216, 111, 134, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+
+@media (pointer: coarse), (max-width: 700px) {
+  .map-canvas {
+    display: none;
+  }
+
+  .mental-map-home::before {
+    animation: none;
+    filter: blur(18px);
+    opacity: 0.58;
+  }
+
+  .mental-map-home::after {
+    display: none;
+  }
+
+  .map-board,
+  .mind-card,
+  .paper-fragment,
+  .map-inspector,
+  .map-node,
+  .alone-fragment > div,
+  .memory-photo figcaption {
+    backdrop-filter: none;
+  }
+}
